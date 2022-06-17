@@ -1,15 +1,37 @@
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { Button, Input, Image } from '@rneui/base';
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import firebaseApp from '../../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function login() {
-    console.log('user login');
+  useLayoutEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        navigation.replace('Home');
+      }
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  async function login() {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   return (
