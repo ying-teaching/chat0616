@@ -4,6 +4,16 @@ import { StatusBar } from 'expo-status-bar';
 
 import { Button, Input, Text } from '@rneui/base';
 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+
+import firebaseApp from '../../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -16,8 +26,23 @@ export default function RegisterScreen({ navigation }) {
     });
   }, [navigation]);
 
-  function register() {
-    console.log('register called');
+  async function register() {
+    try {
+      const userCredentail = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredentail.user, {
+        displayName: name,
+        photoURL: imageUrl,
+      });
+
+      console.log(`user ${name} created.`);
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   return (
