@@ -1,9 +1,17 @@
-import { StyleSheet, View, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { Avatar, Text } from '@rneui/base';
+import { Avatar } from '@rneui/base';
 
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+
+import ChatListItem from './Components/ChatListItem';
 
 import { getAuth, signOut } from 'firebase/auth';
 import firebaseApp from '../../firebase/firebase';
@@ -69,10 +77,21 @@ export default function HomeScreen({ navigation }) {
     }
   }
 
+  function createItem(chat) {
+    const {
+      id,
+      data: { chatName },
+    } = chat;
+    // const id = chat.id;
+    // const chatName = chat.data.chatName;
+
+    return <ChatListItem key={id} id={id} chatName={chatName} />;
+  }
+
   return (
-    <View>
-      <Text>Home Screen</Text>
-    </View>
+    <SafeAreaView>
+      <ScrollView>{chats.map(createItem)}</ScrollView>
+    </SafeAreaView>
   );
 }
 
