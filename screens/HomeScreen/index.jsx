@@ -1,5 +1,5 @@
 import { StyleSheet, View, Pressable } from 'react-native';
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { Avatar, Text } from '@rneui/base';
 
 import { AntDesign } from '@expo/vector-icons';
@@ -9,7 +9,29 @@ import { getAuth, signOut } from 'firebase/auth';
 import firebaseApp from '../../firebase/firebase';
 const auth = getAuth(firebaseApp);
 
+import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+const db = getFirestore(firebaseApp);
+
 export default function HomeScreen({ navigation }) {
+  const [chats, setChats] = useState([]);
+
+  function getSnapshot(snapshot) {
+    setChats(snapshot.docs.map(createDoc));
+  }
+
+  function createDoc(doc) {
+    return {
+      id: doc.id,
+      data: doc.data(),
+    };
+  }
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'chats'), getSnapshot);
+
+    return unsubscribe;
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Chat Home',
