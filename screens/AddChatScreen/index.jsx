@@ -2,8 +2,9 @@ import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Input } from '@rneui/base';
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
+import { AntDesign } from '@expo/vector-icons';
 
+import { getFirestore, addDoc, collection } from 'firebase/firestore';
 import firebaseApp from '../../firebase/firebase';
 const db = getFirestore(firebaseApp);
 
@@ -32,6 +33,7 @@ export default function AddChatScreen({ navigation }) {
         placeholder="Enter a chat name"
         onChangeText={setChatName}
         onSubmitEditing={createChat}
+        leftIcon={<AntDesign name="wechat" size={24} color="black" />}
       />
       <Button
         title="Create a New Chat"
