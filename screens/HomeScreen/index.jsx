@@ -2,6 +2,9 @@ import { StyleSheet, View, Pressable } from 'react-native';
 import React, { useLayoutEffect } from 'react';
 import { Avatar, Text } from '@rneui/base';
 
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+
 import { getAuth, signOut } from 'firebase/auth';
 import firebaseApp from '../../firebase/firebase';
 const auth = getAuth(firebaseApp);
@@ -18,6 +21,17 @@ export default function HomeScreen({ navigation }) {
         <View>
           <Pressable onPress={logout}>
             <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
+          </Pressable>
+        </View>
+      ),
+
+      headerRight: () => (
+        <View style={styles.headerRight}>
+          <Pressable>
+            <AntDesign name="camerao" size={24} color="black" />
+          </Pressable>
+          <Pressable>
+            <FontAwesome name="pencil-square-o" size={24} color="black" />
           </Pressable>
         </View>
       ),
@@ -40,4 +54,11 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  headerRight: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 80,
+    marginRight: 20,
+  },
+});
