@@ -1,11 +1,29 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
-import React from 'react';
+import { StyleSheet, View, Pressable } from 'react-native';
+import React, { useLayoutEffect } from 'react';
+import { Avatar, Text } from '@rneui/base';
 
 import { getAuth, signOut } from 'firebase/auth';
 import firebaseApp from '../../firebase/firebase';
 const auth = getAuth(firebaseApp);
 
 export default function HomeScreen({ navigation }) {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Chat Home',
+      headerStyle: { backgroundColor: 'white' },
+      headerTitleStyle: { color: 'black' },
+      headerTintColor: 'black',
+
+      headerLeft: () => (
+        <View>
+          <Pressable onPress={logout}>
+            <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
+          </Pressable>
+        </View>
+      ),
+    });
+  }, [navigation]);
+
   async function logout() {
     try {
       await signOut(auth);
@@ -18,7 +36,6 @@ export default function HomeScreen({ navigation }) {
   return (
     <View>
       <Text>Home Screen</Text>
-      <Button onPress={logout} title="Logout" />
     </View>
   );
 }
