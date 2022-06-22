@@ -66,7 +66,7 @@ export default function RegisterScreen({ navigation }) {
           onChangeText={setPassword}
         />
         <Input
-          placeholder="Profile Pic UR"
+          placeholder="Profile Pic URL"
           type="text"
           onChangeText={setImageUrl}
           onSubmitEditing={register}
