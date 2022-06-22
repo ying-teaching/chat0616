@@ -2,6 +2,10 @@ import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Input } from '@rneui/base';
+import { getFirestore, addDoc, collection } from 'firebase/firestore';
+
+import firebaseApp from '../../firebase/firebase';
+const db = getFirestore(firebaseApp);
 
 export default function AddChatScreen({ navigation }) {
   const [chatName, setChatName] = useState('');
@@ -13,8 +17,13 @@ export default function AddChatScreen({ navigation }) {
     });
   }, [navigation]);
 
-  function createChat() {
-    console.log('create chat');
+  async function createChat() {
+    try {
+      await addDoc(collection(db, 'chats'), { chatName });
+      navigation.goBack();
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   return (
