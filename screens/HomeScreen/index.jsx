@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }) {
           <Pressable>
             <AntDesign name="camerao" size={24} color="black" />
           </Pressable>
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate('AddChat')}>
             <FontAwesome name="pencil-square-o" size={24} color="black" />
           </Pressable>
         </View>
