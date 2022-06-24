@@ -1,5 +1,5 @@
 import { Avatar } from '@rneui/base';
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 
 import {
   Keyboard,
@@ -89,6 +89,19 @@ export default function ChatScreen({ navigation, route }) {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    const messagesRef = collection(db, 'chats', id, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'asc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const dbMessages = [];
+      querySnapshot.forEach((doc) => {
+        dbMessages.push({ id: doc.id, data: doc.data() });
+      });
+      setMessages(dbMessages);
+    });
+    return unsubscribe;
+  }, [route]);
+
   function sendMessage() {
     if (!input) return;
     Keyboard.dismiss();
@@ -108,6 +121,14 @@ export default function ChatScreen({ navigation, route }) {
     setInput('');
   }
 
+  function showMessage({ id, data }) {
+    return (
+      <View key={id}>
+        <Text>{data.message}</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -118,7 +139,7 @@ export default function ChatScreen({ navigation, route }) {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView style={styles.scrollView}>
-            <Text>Display an ordered list of messages.</Text>
+            {messages.map(showMessage)}
           </ScrollView>
         </TouchableWithoutFeedback>
 
@@ -126,6 +147,7 @@ export default function ChatScreen({ navigation, route }) {
           <TextInput
             placeholder="Chat message"
             style={styles.textInput}
+            value={input}
             onChangeText={setInput}
             onSubmitEditing={sendMessage}
           />
