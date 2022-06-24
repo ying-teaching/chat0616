@@ -23,6 +23,21 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import styles from './styles';
 
+import { getAuth } from 'firebase/auth';
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore';
+import firebaseApp from '../../firebase/firebase';
+
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
 export default function ChatScreen({ navigation, route }) {
   const { id, chatName } = route.params;
 
@@ -75,7 +90,22 @@ export default function ChatScreen({ navigation, route }) {
   }, [navigation]);
 
   function sendMessage() {
-    console.log('send msg: ' + input);
+    if (!input) return;
+    Keyboard.dismiss();
+
+    try {
+      const chatMessages = collection(db, 'chats', id, 'messages');
+      addDoc(chatMessages, {
+        timestamp: serverTimestamp(),
+        message: input,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+
+    setInput('');
   }
 
   return (
