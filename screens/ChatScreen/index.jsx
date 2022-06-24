@@ -1,15 +1,33 @@
 import { Avatar } from '@rneui/base';
 import React, { useState, useLayoutEffect } from 'react';
 
-import { View, Text, Pressable } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
+import { StatusBar } from 'expo-status-bar';
 
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 import styles from './styles';
 
 export default function ChatScreen({ navigation, route }) {
   const { id, chatName } = route.params;
+
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -56,9 +74,32 @@ export default function ChatScreen({ navigation, route }) {
     });
   }, [navigation]);
 
+  function sendMessage() {
+    console.log('send msg: ' + input);
+  }
+
   return (
-    <View>
-      <Text>A list of all chat messages -- in time order</Text>
-    </View>
+    <SafeAreaView>
+      <StatusBar style="light" />
+      <KeyboardAvoidingView>
+        <TouchableWithoutFeedback>
+          <ScrollView>
+            <Text>Display an ordered list of messages.</Text>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+
+        <View style={styles.footer}>
+          <TextInput
+            placeholder="Chat message"
+            style={styles.textInput}
+            onChangeText={setInput}
+            onSubmitEditing={sendMessage}
+          />
+          <Pressable onPress={sendMessage}>
+            <FontAwesome name="send" size={24} color="blue" />
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
