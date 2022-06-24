@@ -79,11 +79,15 @@ export default function ChatScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <KeyboardAvoidingView>
-        <TouchableWithoutFeedback>
-          <ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={90}
+        style={styles.kyeboardView}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView style={styles.scrollView}>
             <Text>Display an ordered list of messages.</Text>
           </ScrollView>
         </TouchableWithoutFeedback>
