@@ -122,9 +122,28 @@ export default function ChatScreen({ navigation, route }) {
   }
 
   function showMessage({ id, data }) {
+    const isMe = data.displayName === auth.currentUser.displayName;
+    const messageStyle = isMe ? styles.me : styles.other;
+    const textStyle = isMe ? styles.meText : styles.otherText;
+    const nameStyle = isMe ? styles.meName : styles.otherName;
+
     return (
-      <View key={id}>
-        <Text>{data.message}</Text>
+      <View key={id} style={messageStyle}>
+        <Avatar
+          source={{ uri: data.photoURL }}
+          rounded
+          size={30}
+          position="absolute"
+          bottom={-15}
+          right={-15}
+          containerStyle={{
+            position: 'absolute',
+            bottom: -15,
+            right: -5,
+          }}
+        />
+        <Text style={textStyle}>{data.message}</Text>
+        {isMe ? null : <Text style={nameStyle}>{data.displayName}</Text>}
       </View>
     );
   }
@@ -135,14 +154,13 @@ export default function ChatScreen({ navigation, route }) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={90}
-        style={styles.kyeboardView}
+        style={styles.keyboardView}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
             {messages.map(showMessage)}
           </ScrollView>
         </TouchableWithoutFeedback>
-
         <View style={styles.footer}>
           <TextInput
             placeholder="Chat message"
