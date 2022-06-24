@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 
 import { ListItem, Avatar } from '@rneui/base';
 
-export default function ChatListItem({ id, chatName }) {
+export default function ChatListItem({ id, chatName, enterChat }) {
   return (
-    <ListItem>
+    <ListItem onPress={() => enterChat(id, chatName)}>
       <Avatar
         source={{
           uri: 'https://www.gstatic.com/mobilesdk/180227_mobilesdk/database_rules_zerostate.png',

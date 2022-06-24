@@ -40,6 +40,10 @@ export default function HomeScreen({ navigation }) {
     return unsubscribe;
   }, []);
 
+  function enterChat(id, chatName) {
+    navigation.navigate('Chat', { id, chatName });
+  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Chat Home',
@@ -85,7 +89,14 @@ export default function HomeScreen({ navigation }) {
     // const id = chat.id;
     // const chatName = chat.data.chatName;
 
-    return <ChatListItem key={id} id={id} chatName={chatName} />;
+    return (
+      <ChatListItem
+        key={id}
+        id={id}
+        chatName={chatName}
+        enterChat={enterChat}
+      />
+    );
   }
 
   return (
